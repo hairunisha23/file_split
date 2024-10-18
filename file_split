@@ -1,0 +1,55 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class FileSplitter {
+    private Queue<String> linesQueue;
+
+    public FileSplitter() {
+        linesQueue = new LinkedList<>();
+    }
+
+    // Membaca file dan memasukkan setiap baris ke dalam queue
+    public void readFile(String filePath) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                linesQueue.add(line); // Menambahkan setiap baris ke dalam queue
+            }
+        } catch (IOException e) {
+            System.out.println("Terjadi kesalahan saat membaca file: " + e.getMessage());
+        }
+    }
+
+    // Memotong file menjadi beberapa bagian sesuai input pengguna
+    public void splitFile(int partSize) {
+        int partNumber = 1;
+        while (!linesQueue.isEmpty()) {
+            System.out.println("Bagian " + partNumber + ":");
+            for (int i = 0; i < partSize && !linesQueue.isEmpty(); i++) {
+                System.out.println(linesQueue.poll()); // Mengambil dan menghapus elemen dari queue
+            }
+            partNumber++;
+            System.out.println(); // Tambahkan baris kosong antar bagian
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        FileSplitter fileSplitter = new FileSplitter();
+
+        System.out.print("Masukkan path file yang ingin dibaca: ");
+        String filePath = scanner.nextLine();
+
+        fileSplitter.readFile(filePath);
+
+        System.out.print("Masukkan jumlah baris per bagian: ");
+        int partSize = scanner.nextInt();
+
+        fileSplitter.splitFile(partSize);
+        scanner.close();
+    }
+}
